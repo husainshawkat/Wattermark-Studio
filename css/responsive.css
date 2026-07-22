@@ -1,0 +1,40 @@
+/* Mobile-first: below 860px the properties panel becomes a bottom sheet,
+   tool rail hides in favor of the FAB + sheet, and quickbar shows for the
+   selected layer. */
+
+@media (max-width: 860px) {
+  .tool-rail { display: none; }
+  .fab { display: flex; }
+
+  .props-panel {
+    position: fixed; left: 0; right: 0; bottom: 0; top: auto; width: 100%;
+    max-height: 72vh; border-left: none; border-top: 1px solid var(--border-strong);
+    border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: 0 -12px 40px rgba(0,0,0,0.5);
+    transform: translateY(100%); transition: transform var(--dur-mid) var(--ease);
+    z-index: 45; padding-bottom: calc(var(--sp-6) + env(safe-area-inset-bottom, 0px));
+  }
+  .props-panel.open { transform: translateY(0); }
+
+  .canvas-scroll { padding: var(--sp-4); }
+  .canvas-toolbar { top: var(--sp-2); }
+
+  .editor-filename { font-size: 12px; }
+}
+
+@media (min-width: 861px) {
+  .layer-quickbar { display: none !important; }
+}
+
+@media (max-width: 520px) {
+  .home-hero { text-align: left; }
+  .eyebrow { display: inline-block; }
+  .home-title { font-size: 24px; text-align: left; }
+  .home-lede { text-align: left; margin: 0; }
+  .dropzone { padding: var(--sp-6) var(--sp-4); }
+  .field-row { flex-direction: column; gap: 0; }
+}
+
+/* Larger desktop: widen properties panel slightly, cap canvas scroll padding */
+@media (min-width: 1400px) {
+  :root { --props-panel-w: 360px; }
+}

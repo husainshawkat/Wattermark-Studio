@@ -1,0 +1,95 @@
+/* ===================================================================
+   HUSAIN WATERMARK STUDIO — DESIGN TOKENS
+   Direction: a photographer's darkroom / light table at night.
+   Warm charcoal surfaces, brass "safelight" accent, teal for calm
+   secondary actions. Fraunces for editorial headings, Inter for the
+   working UI, JetBrains Mono for data readouts (EXIF, coordinates).
+   =================================================================== */
+
+:root {
+  /* ---- Color: dark (default) ---- */
+  --bg: #12130f;
+  --bg-elevated: #1b1c16;
+  --bg-elevated-2: #23241c;
+  --bg-inset: #0c0d0a;
+  --surface-glass: rgba(27, 28, 22, 0.72);
+  --border: rgba(237, 233, 222, 0.10);
+  --border-strong: rgba(237, 233, 222, 0.18);
+
+  --text: #ede9de;
+  --text-dim: #a29c8b;
+  --text-faint: #6f6a5d;
+
+  --accent: #c9a227;        /* brass safelight */
+  --accent-strong: #e0b83a;
+  --accent-ink: #241d05;    /* text on accent */
+  --accent-2: #4a7a71;      /* darkroom teal */
+  --accent-2-strong: #5e938a;
+  --danger: #c1443c;
+  --danger-strong: #d65a51;
+  --success: #5c9a6b;
+
+  --focus-ring: 0 0 0 3px rgba(201, 162, 39, 0.45);
+
+  /* ---- Type ---- */
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+
+  /* ---- Spacing scale ---- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  /* ---- Radius ---- */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-full: 999px;
+
+  /* ---- Shadow ---- */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.35);
+  --shadow-md: 0 8px 30px rgba(0,0,0,0.45);
+  --shadow-glow: 0 0 40px rgba(201, 162, 39, 0.18);
+
+  /* ---- Motion ---- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 140ms;
+  --dur-mid: 260ms;
+  --dur-slow: 420ms;
+
+  /* ---- Layout ---- */
+  --topbar-h: 60px;
+  --bottom-nav-h: 64px;
+  --tool-rail-w: 64px;
+  --props-panel-w: 320px;
+}
+
+/* ---- Light theme override ---- */
+:root[data-theme="light"] {
+  --bg: #f5f2ea;
+  --bg-elevated: #ffffff;
+  --bg-elevated-2: #ece7d9;
+  --bg-inset: #eae5d7;
+  --surface-glass: rgba(255, 255, 255, 0.72);
+  --border: rgba(30, 27, 15, 0.10);
+  --border-strong: rgba(30, 27, 15, 0.18);
+
+  --text: #1e1b0f;
+  --text-dim: #5c5748;
+  --text-faint: #948d78;
+
+  --accent-ink: #ffffff;
+  --shadow-sm: 0 2px 8px rgba(30,27,15,0.08);
+  --shadow-md: 0 8px 30px rgba(30,27,15,0.12);
+  --shadow-glow: 0 0 40px rgba(201, 162, 39, 0.14);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
