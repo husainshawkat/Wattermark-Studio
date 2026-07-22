@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5" />
+<title>Husain Watermark Studio</title>
+<meta name="description" content="Private, offline-capable watermarking studio. Every pixel stays on your device." />
+<meta name="theme-color" content="#12130F" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="assets/icons/icon-192.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="assets/icons/icon-192.svg" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<!-- Styles -->
+<link rel="stylesheet" href="css/tokens.css" />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/components.css" />
+<link rel="stylesheet" href="css/editor.css" />
+<link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+<!-- Grain overlay (signature texture) -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ================= SPLASH ================= -->
+<section id="view-splash" class="view view-splash" aria-label="Loading">
+  <div class="splash-mark">
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="32" cy="32" r="30" stroke="var(--accent)" stroke-width="1.5" opacity="0.4"/>
+      <path d="M20 40 L32 20 L44 40" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="32" cy="32" r="4" fill="var(--accent)"/>
+    </svg>
+  </div>
+  <h1 class="splash-title">Husain Watermark Studio</h1>
+  <p class="splash-sub">Your photos never leave this device.</p>
+  <div class="splash-bar"><div class="splash-bar-fill" id="splashProgress"></div></div>
+</section>
+
+<!-- ================= HOME ================= -->
+<section id="view-home" class="view view-home hidden">
+  <header class="topbar">
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="30" stroke="var(--accent)" stroke-width="2" opacity="0.5"/><path d="M20 40 L32 20 L44 40" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="32" r="4" fill="var(--accent)"/></svg>
+      <span>Husain Watermark Studio</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="btnTheme" title="Toggle theme" aria-label="Toggle light and dark theme">
+        <svg id="iconTheme" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="icon-btn" id="btnSettings" title="Settings" aria-label="Open settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="home-main">
+    <div class="home-hero">
+      <span class="eyebrow">Private by construction</span>
+      <h1 class="home-title">Watermark thousands of photos<br/>without a single upload.</h1>
+      <p class="home-lede">Text, logo, signature, QR, EXIF and repeating watermarks — rendered entirely in your browser, saved to your device, never sent anywhere.</p>
+    </div>
+
+    <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload images">
+      <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/tiff,image/avif" multiple hidden />
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <p class="dropzone-title">Drop images here or tap to browse</p>
+      <p class="dropzone-sub">PNG · JPEG · WEBP · TIFF · AVIF · HEIC — one photo or a thousand</p>
+      <div class="dropzone-actions">
+        <button class="btn btn-ghost" id="btnCamera">Use camera</button>
+      </div>
+    </div>
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden />
+
+    <div class="home-section">
+      <div class="section-head">
+        <h2>Recent projects</h2>
+      </div>
+      <div class="recent-grid" id="recentGrid">
+        <p class="empty-hint" id="recentEmpty">Projects you save will appear here.</p>
+      </div>
+    </div>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Primary">
+    <button class="nav-item active" data-nav="home">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-item" data-nav="batch">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Batch</span>
+    </button>
+    <button class="nav-item" data-nav="templates">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span>Templates</span>
+    </button>
+    <button class="nav-item" data-nav="settings">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>Settings</span>
+    </button>
+  </nav>
+</section>
+
+<!-- ================= EDITOR ================= -->
+<section id="view-editor" class="view view-editor hidden">
+  <header class="editor-topbar">
+    <button class="icon-btn" id="btnBackHome" aria-label="Back to home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </button>
+    <div class="editor-filename" id="editorFilename">untitled.jpg</div>
+    <div class="editor-topbar-actions">
+      <button class="icon-btn" id="btnUndo" aria-label="Undo" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-15-6.7L3 13"/></svg>
+      </button>
+      <button class="icon-btn" id="btnRedo" aria-label="Redo" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 15-6.7L21 13"/></svg>
+      </button>
+      <button class="btn btn-primary btn-sm" id="btnExport">Export</button>
+    </div>
+  </header>
+
+  <div class="editor-body">
+    <!-- Tool rail -->
+    <nav class="tool-rail" aria-label="Tools">
+      <button class="tool-btn active" data-tool="select" title="Select">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51z"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="text" title="Text watermark">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="logo" title="Logo watermark">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="signature" title="Signature">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17s2-1 4-1 3 2 5 2 3-2 5-2 4 1 4 1"/><path d="M4 12c2-4 4-8 6-8s2 6 3 6 2-4 4-4 3 5 3 5"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="qr" title="QR watermark">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><line x1="14" y1="14" x2="14" y2="21"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="17.5" y1="14" x2="17.5" y2="17.5"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="exif" title="Date / EXIF watermark">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="repeat" title="Repeat pattern">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="7" height="7"/><rect x="9" y="9" width="7" height="7"/><rect x="16" y="16" width="7" height="7" opacity="0.5"/></svg>
+      </button>
+      <div class="tool-rail-spacer"></div>
+      <button class="tool-btn" data-tool="layers" title="Layers">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="adjust" title="Adjust image">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+      </button>
+    </nav>
+
+    <!-- Canvas stage -->
+    <div class="canvas-stage" id="canvasStage">
+      <div class="canvas-toolbar">
+        <button class="chip-btn" id="btnZoomOut" aria-label="Zoom out">−</button>
+        <span class="zoom-readout" id="zoomReadout">100%</span>
+        <button class="chip-btn" id="btnZoomIn" aria-label="Zoom in">+</button>
+        <button class="chip-btn" id="btnZoomFit">Fit</button>
+        <span class="canvas-toolbar-sep"></span>
+        <button class="chip-btn chip-toggle" id="btnToggleGrid" aria-pressed="false">Grid</button>
+        <button class="chip-btn chip-toggle" id="btnToggleGuides" aria-pressed="true">Guides</button>
+      </div>
+      <div class="canvas-scroll" id="canvasScroll">
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="mainCanvas"></canvas>
+        </div>
+      </div>
+      <div class="canvas-empty" id="canvasEmpty">
+        <p>Add another photo to continue batching, or start editing this one.</p>
+      </div>
+    </div>
+
+    <!-- Properties panel -->
+    <aside class="props-panel" id="propsPanel" aria-label="Properties">
+      <div class="props-empty" id="propsEmpty">
+        <p>Select a tool on the left to add a watermark, or click a layer to edit it.</p>
+      </div>
+
+      <!-- TEXT panel -->
+      <div class="props-section hidden" id="panelText">
+        <h3>Text watermark</h3>
+        <label class="field">
+          <span>Content</span>
+          <textarea id="textContent" rows="2" placeholder="© Your Name 2026">© Your Name 2026</textarea>
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Variables</span>
+            <select id="textVariable">
+              <option value="">— insert —</option>
+              <option value="{date}">Date</option>
+              <option value="{time}">Time</option>
+              <option value="{filename}">File name</option>
+              <option value="{camera}">Camera</option>
+              <option value="{lens}">Lens</option>
+              <option value="{iso}">ISO</option>
+              <option value="{aperture}">Aperture</option>
+              <option value="{shutter}">Shutter speed</option>
+              <option value="{gps}">GPS</option>
+            </select>
+          </label>
+        </div>
+        <label class="field">
+          <span>Font family</span>
+          <select id="textFont">
+            <option value="Inter">Inter</option>
+            <option value="Fraunces">Fraunces</option>
+            <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
+            <option value="'Playfair Display', serif">Playfair Display</option>
+            <option value="'Great Vibes', cursive">Great Vibes (script)</option>
+            <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+          </select>
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Size</span>
+            <input type="range" id="textSize" min="8" max="400" value="48" />
+          </label>
+          <label class="field">
+            <span>Weight</span>
+            <select id="textWeight">
+              <option value="300">Light</option>
+              <option value="400" selected>Regular</option>
+              <option value="500">Medium</option>
+              <option value="700">Bold</option>
+              <option value="900">Black</option>
+            </select>
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="field">
+            <span>Color</span>
+            <input type="color" id="textColor" value="#ffffff" />
+          </label>
+          <label class="field checkbox-field">
+            <input type="checkbox" id="textGradientToggle" />
+            <span>Gradient fill</span>
+          </label>
+        </div>
+        <div class="field-row hidden" id="gradientRow">
+          <label class="field"><span>From</span><input type="color" id="textGradientFrom" value="#c9a227" /></label>
+          <label class="field"><span>To</span><input type="color" id="textGradientTo" value="#ffffff" /></label>
+        </div>
+        <div class="field-row">
+          <label class="field">
+            <span>Letter spacing</span>
+            <input type="range" id="textLetterSpacing" min="-50" max="400" value="0" />
+          </label>
+          <label class="field">
+            <span>Rotation</span>
+            <input type="range" id="textRotation" min="-180" max="180" value="0" />
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="field">
+            <span>Opacity</span>
+            <input type="range" id="textOpacity" min="0" max="100" value="80" />
+          </label>
+          <label class="field">
+            <span>Blend mode</span>
+            <select id="textBlend">
+              <option value="normal">Normal</option>
+              <option value="multiply">Multiply</option>
+              <option value="screen">Screen</option>
+              <option value="overlay">Overlay</option>
+              <option value="difference">Difference</option>
+            </select>
+          </label>
+        </div>
+        <details class="field-group">
+          <summary>Stroke, shadow &amp; glow</summary>
+          <label class="field checkbox-field"><input type="checkbox" id="textStrokeToggle" /><span>Stroke</span></label>
+          <div class="field-row">
+            <label class="field"><span>Stroke color</span><input type="color" id="textStrokeColor" value="#000000" /></label>
+            <label class="field"><span>Width</span><input type="range" id="textStrokeWidth" min="0" max="20" value="1" /></label>
+          </div>
+          <label class="field checkbox-field"><input type="checkbox" id="textShadowToggle" /><span>Drop shadow</span></label>
+          <label class="field checkbox-field"><input type="checkbox" id="textGlowToggle" /><span>Glow</span></label>
+        </details>
+        <button class="btn btn-primary btn-block" id="btnAddText">Add text watermark</button>
+      </div>
+
+      <!-- LOGO panel -->
+      <div class="props-section hidden" id="panelLogo">
+        <h3>Logo / signature watermark</h3>
+        <label class="field file-field">
+          <span>Upload PNG or SVG</span>
+          <input type="file" id="logoFile" accept="image/png,image/svg+xml" />
+        </label>
+        <div class="field-row">
+          <label class="field"><span>Scale</span><input type="range" id="logoScale" min="5" max="300" value="100" /></label>
+          <label class="field"><span>Rotation</span><input type="range" id="logoRotation" min="-180" max="180" value="0" /></label>
+        </div>
+        <div class="field-row">
+          <label class="field"><span>Opacity</span><input type="range" id="logoOpacity" min="0" max="100" value="80" /></label>
+          <label class="field"><span>Corner radius</span><input type="range" id="logoRadius" min="0" max="100" value="0" /></label>
+        </div>
+        <label class="field checkbox-field"><input type="checkbox" id="logoShadowToggle" /><span>Drop shadow</span></label>
+        <label class="field checkbox-field"><input type="checkbox" id="logoGlowToggle" /><span>Glow</span></label>
+        <p class="hint">Tip: use the Signature tool to draw a freehand mark instead of uploading one.</p>
+      </div>
+
+      <!-- SIGNATURE panel -->
+      <div class="props-section hidden" id="panelSignature">
+        <h3>Draw signature</h3>
+        <canvas id="sigPad" width="280" height="140" class="sig-pad"></canvas>
+        <div class="field-row">
+          <label class="field"><span>Ink color</span><input type="color" id="sigColor" value="#ffffff" /></label>
+          <label class="field"><span>Thickness</span><input type="range" id="sigThickness" min="1" max="12" value="3" /></label>
+        </div>
+        <div class="field-row">
+          <button class="btn btn-ghost btn-sm" id="btnSigClear">Clear</button>
+          <button class="btn btn-primary btn-sm" id="btnSigAdd">Add to canvas</button>
+        </div>
+      </div>
+
+      <!-- QR panel -->
+      <div class="props-section hidden" id="panelQr">
+        <h3>QR code watermark</h3>
+        <label class="field">
+          <span>Content (URL or text)</span>
+          <input type="text" id="qrContent" placeholder="https://example.com" value="https://example.com" />
+        </label>
+        <div class="field-row">
+          <label class="field"><span>Size</span><input type="range" id="qrSize" min="40" max="400" value="120" /></label>
+          <label class="field"><span>Opacity</span><input type="range" id="qrOpacity" min="10" max="100" value="90" /></label>
+        </div>
+        <div class="field-row">
+          <label class="field"><span>Foreground</span><input type="color" id="qrFg" value="#111111" /></label>
+          <label class="field"><span>Background</span><input type="color" id="qrBg" value="#ffffff" /></label>
+        </div>
+        <button class="btn btn-primary btn-block" id="btnAddQr">Add QR watermark</button>
+      </div>
+
+      <!-- EXIF panel -->
+      <div class="props-section hidden" id="panelExif">
+        <h3>Date / time / EXIF stamp</h3>
+        <p class="hint" id="exifDetected">Reading EXIF from the current image…</p>
+        <div class="exif-checks" id="exifChecks">
+          <label class="chip-check"><input type="checkbox" value="{date}" checked /> Date</label>
+          <label class="chip-check"><input type="checkbox" value="{time}" /> Time</label>
+          <label class="chip-check"><input type="checkbox" value="{camera}" /> Camera</label>
+          <label class="chip-check"><input type="checkbox" value="{lens}" /> Lens</label>
+          <label class="chip-check"><input type="checkbox" value="{iso}" /> ISO</label>
+          <label class="chip-check"><input type="checkbox" value="{aperture}" /> Aperture</label>
+          <label class="chip-check"><input type="checkbox" value="{shutter}" /> Shutter</label>
+          <label class="chip-check"><input type="checkbox" value="{gps}" /> GPS</label>
+        </div>
+        <label class="field">
+          <span>Style</span>
+          <select id="exifStyle">
+            <option value="badge">Badge (film-strip)</option>
+            <option value="plain">Plain text</option>
+            <option value="mono">Monospace data readout</option>
+          </select>
+        </label>
+        <button class="btn btn-primary btn-block" id="btnAddExif">Add EXIF stamp</button>
+      </div>
+
+      <!-- REPEAT panel -->
+      <div class="props-section hidden" id="panelRepeat">
+        <h3>Repeat / tile pattern</h3>
+        <label class="field">
+          <span>Pattern</span>
+          <select id="repeatPattern">
+            <option value="diagonal">Diagonal</option>
+            <option value="horizontal">Horizontal</option>
+            <option value="vertical">Vertical</option>
+            <option value="grid">Grid</option>
+          </select>
+        </label>
+        <div class="field-row">
+          <label class="field"><span>Spacing X</span><input type="range" id="repeatSpacingX" min="20" max="400" value="150" /></label>
+          <label class="field"><span>Spacing Y</span><input type="range" id="repeatSpacingY" min="20" max="400" value="150" /></label>
+        </div>
+        <div class="field-row">
+          <label class="field"><span>Density</span><input type="range" id="repeatDensity" min="1" max="10" value="4" /></label>
+          <label class="field"><span>Rotation</span><input type="range" id="repeatRotation" min="-90" max="90" value="-30" /></label>
+        </div>
+        <label class="field"><span>Opacity</span><input type="range" id="repeatOpacity" min="5" max="100" value="20" /></label>
+        <p class="hint">Repeats the currently selected text or logo layer as a tiled pattern across the whole image.</p>
+        <button class="btn btn-primary btn-block" id="btnAddRepeat">Apply repeat pattern</button>
+      </div>
+
+      <!-- LAYERS panel -->
+      <div class="props-section hidden" id="panelLayers">
+        <h3>Layers</h3>
+        <ul class="layer-list" id="layerList"></ul>
+      </div>
+
+      <!-- ADJUST panel -->
+      <div class="props-section hidden" id="panelAdjust">
+        <h3>Adjust image</h3>
+        <label class="field"><span>Brightness</span><input type="range" id="adjBrightness" min="-100" max="100" value="0" /></label>
+        <label class="field"><span>Contrast</span><input type="range" id="adjContrast" min="-100" max="100" value="0" /></label>
+        <label class="field"><span>Saturation</span><input type="range" id="adjSaturation" min="-100" max="100" value="0" /></label>
+        <label class="field"><span>Temperature</span><input type="range" id="adjTemperature" min="-100" max="100" value="0" /></label>
+        <label class="field"><span>Vignette</span><input type="range" id="adjVignette" min="0" max="100" value="0" /></label>
+        <div class="field-row">
+          <button class="btn btn-ghost btn-sm" id="btnAdjReset">Reset</button>
+          <button class="btn btn-ghost btn-sm" id="btnRotate90">Rotate 90°</button>
+          <button class="btn btn-ghost btn-sm" id="btnFlipH">Flip H</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Selected layer quick bar (mobile) -->
+  <div class="layer-quickbar" id="layerQuickbar">
+    <button class="icon-btn" id="qbDuplicate" aria-label="Duplicate layer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+    <button class="icon-btn" id="qbLock" aria-label="Lock layer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>
+    <button class="icon-btn" id="qbHide" aria-label="Hide layer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.62 21.62 0 0 1 5.06-6.06M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.6 21.6 0 0 1-3.22 4.44M1 1l22 22"/></svg></button>
+    <button class="icon-btn danger" id="qbDelete" aria-label="Delete layer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
+  </div>
+
+  <!-- Mobile bottom tool sheet trigger -->
+  <button class="fab" id="fabAddWatermark" aria-label="Add watermark">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+</section>
+
+<!-- ================= BATCH MANAGER ================= -->
+<section id="view-batch" class="view view-batch hidden">
+  <header class="editor-topbar">
+    <button class="icon-btn" id="btnBatchBack" aria-label="Back to home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </button>
+    <div class="editor-filename">Batch manager</div>
+    <div class="editor-topbar-actions">
+      <button class="btn btn-primary btn-sm" id="btnBatchExportAll">Export all</button>
+    </div>
+  </header>
+  <div class="batch-body">
+    <div class="batch-summary" id="batchSummary">No images queued.</div>
+    <div class="batch-progress-wrap hidden" id="batchProgressWrap">
+      <div class="batch-progress"><div class="batch-progress-fill" id="batchProgressFill"></div></div>
+      <div class="batch-progress-meta">
+        <span id="batchProgressText">0 / 0</span>
+        <span id="batchEta"></span>
+      </div>
+      <div class="batch-controls">
+        <button class="btn btn-ghost btn-sm" id="btnBatchPause">Pause</button>
+        <button class="btn btn-ghost btn-sm" id="btnBatchCancel">Cancel</button>
+      </div>
+    </div>
+    <ul class="batch-list" id="batchList"></ul>
+  </div>
+</section>
+
+<!-- ================= SETTINGS ================= -->
+<section id="view-settings" class="view view-settings hidden">
+  <header class="editor-topbar">
+    <button class="icon-btn" id="btnSettingsBack" aria-label="Back to home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </button>
+    <div class="editor-filename">Settings</div>
+    <div class="editor-topbar-actions"></div>
+  </header>
+  <div class="settings-body">
+    <div class="settings-group">
+      <h3>Appearance</h3>
+      <label class="field"><span>Theme</span>
+        <select id="setTheme"><option value="dark">Dark</option><option value="light">Light</option><option value="system">System</option></select>
+      </label>
+    </div>
+    <div class="settings-group">
+      <h3>Export defaults</h3>
+      <label class="field"><span>Format</span>
+        <select id="setFormat"><option value="image/png">PNG</option><option value="image/jpeg" selected>JPEG</option><option value="image/webp">WEBP</option></select>
+      </label>
+      <label class="field"><span>Quality</span><input type="range" id="setQuality" min="10" max="100" value="92" /></label>
+      <label class="field"><span>Filename template</span><input type="text" id="setFilenameTemplate" value="{filename}_watermarked" /></label>
+      <label class="field checkbox-field"><input type="checkbox" id="setPreserveExif" checked /><span>Preserve EXIF metadata on export</span></label>
+      <label class="field checkbox-field"><input type="checkbox" id="setStripGps" /><span>Strip GPS location before export</span></label>
+    </div>
+    <div class="settings-group">
+      <h3>Performance</h3>
+      <label class="field"><span>Mode</span>
+        <select id="setPerfMode"><option value="quality">Best quality</option><option value="balanced" selected>Balanced</option><option value="speed">Fastest</option></select>
+      </label>
+      <label class="field checkbox-field"><input type="checkbox" id="setAutosave" checked /><span>Autosave project while editing</span></label>
+    </div>
+    <div class="settings-group">
+      <h3>Privacy</h3>
+      <p class="hint">Husain Watermark Studio never uploads your images. There is no analytics or tracking of any kind — everything below happens on this device only.</p>
+      <button class="btn btn-ghost" id="btnClearData">Clear all local data</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EXPORT MODAL ================= -->
+<div class="modal-backdrop hidden" id="exportModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="exportModalTitle">
+    <h3 id="exportModalTitle">Export</h3>
+    <label class="field"><span>Format</span>
+      <select id="exportFormat"><option value="image/png">PNG</option><option value="image/jpeg" selected>JPEG</option><option value="image/webp">WEBP</option></select>
+    </label>
+    <label class="field"><span>Quality</span><input type="range" id="exportQuality" min="10" max="100" value="92" /></label>
+    <label class="field"><span>Resolution</span>
+      <select id="exportResolution"><option value="1">Original</option><option value="0.5">50%</option><option value="2">2×</option></select>
+    </label>
+    <label class="field checkbox-field"><input type="checkbox" id="exportAsZip" /><span>Download as ZIP</span></label>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="btnExportCancel">Cancel</button>
+      <button class="btn btn-primary" id="btnExportConfirm">Download</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-region" id="toastRegion" aria-live="polite"></div>
+
+<!-- ================= LIBRARIES ================= -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- ================= APP MODULES ================= -->
+<script src="js/utils.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/history.js"></script>
+<script src="js/exif-reader.js"></script>
+<script src="js/canvas-editor.js"></script>
+<script src="js/watermark-text.js"></script>
+<script src="js/watermark-logo.js"></script>
+<script src="js/watermark-signature.js"></script>
+<script src="js/watermark-qr.js"></script>
+<script src="js/watermark-exif.js"></script>
+<script src="js/watermark-repeat.js"></script>
+<script src="js/adjustments.js"></script>
+<script src="js/layers-panel.js"></script>
+<script src="js/export.js"></script>
+<script src="js/batch.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
